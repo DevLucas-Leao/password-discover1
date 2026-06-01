@@ -87,7 +87,6 @@
             font-weight: 600;
             color: #e2e8f0;
         }
-        /* FORMULÁRIO DE SENHA RESTRITA */
         input {
             width: 100%;
             padding: 0.85rem;
@@ -172,7 +171,17 @@
             color: #38bdf8;
             font-size: 1.3rem;
         }
-        .alert-use {
+        
+        /* LINK ANCORA ENVOLVENDO O BOTÃO INTEIRO */
+        .forced-link {
+            text-decoration: none;
+            display: block;
+            width: 100%;
+        }
+
+        /* BOTÃO DE DIRECIONAMENTO CORRIGIDO */
+        .alert-use-btn {
+            width: 100%;
             background: rgba(251, 191, 36, 0.12);
             border: 2px solid #fbbf24;
             color: #fbbf24;
@@ -183,14 +192,15 @@
             border-radius: 14px;
             cursor: pointer;
             transition: background 0.2s;
+            display: block;
         }
-        .alert-use:hover {
+        .alert-use-btn:hover {
             background: rgba(251, 191, 36, 0.2);
+            color: #fff;
         }
-        .alert-use a {
+        .alert-use-btn span {
             color: #fff;
             text-decoration: underline;
-            margin-left: 0.25rem;
         }
         .hidden {
             display: none !important;
@@ -275,12 +285,4 @@
             </div>
         </div>
 
-        <div class="alert-use" onclick="redirectDestination()">
-            USE EM: <a>chat-sec1.vercel.app</a>
-        </div>
-    </div>
-
-    <script>
-        // Banco de dados seguro com senhas de entrada e credenciais internas
-        const usersDatabase = {
-            arthur: { key: "789321", marcado: "ARTHUR G.", nome: "Arthur", senha: "569012" },
+        <!-- Estrutura duplicada com Link Nativo + Função Forçada via Clique de Botão -->
