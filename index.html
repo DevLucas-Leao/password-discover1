@@ -160,7 +160,7 @@
             color: white;
             font-size: 1.5rem;
             text-align: center;
-            letter-spacing: 0.4em; /* Espaçamento exigido para senhas numéricas */
+            letter-spacing: 0.4em;
             outline: none;
             transition: border-color 0.3s;
         }
@@ -197,7 +197,7 @@
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
         }
 
-        /* === TELA 3: CREDENCIAIS === */
+        /* === TELA 3: CREDENCIAIS E SEPARAÇÃO === */
         .credentials-box {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -210,7 +210,30 @@
             color: #cbd5e1;
         }
 
-        .credentials-box strong {
+        /* Novas classes para a separação exigida */
+        .cred-header {
+            font-weight: 700;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .cred-title {
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .cred-details {
+            padding-left: 1rem;
+            border-left: 2px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .cred-details span {
             color: white;
         }
 
@@ -281,35 +304,70 @@
                 name: "ARTHUR G.",
                 pin: "789321",
                 gradient: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
-                credentials: "Login marcado atual: ARTHUR G.<br>Seu login: Nome: Arthur / Senha: 569012"
+                credentials: `
+                    <div class="cred-header">LOGIN MARCADO ATUAL: ARTHUR G.</div>
+                    <div class="cred-title">Login:</div>
+                    <div class="cred-details">
+                        <span>nome: Arthur</span>
+                        <span>senha: 569012</span>
+                    </div>
+                `
             },
             {
                 id: 2,
                 name: "CRISTIAN L.",
                 pin: "852465",
                 gradient: "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)",
-                credentials: "Login marcado atual: CRISTIAN L.<br>Seu login: Nome: Cristian / Senha: 032311"
+                credentials: `
+                    <div class="cred-header">LOGIN MARCADO ATUAL: CRISTIAN L.</div>
+                    <div class="cred-title">Login:</div>
+                    <div class="cred-details">
+                        <span>nome: Cristian</span>
+                        <span>senha: 032311</span>
+                    </div>
+                `
             },
             {
                 id: 3,
                 name: "RUAN V.",
                 pin: "094578",
                 gradient: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)",
-                credentials: "Login marcado atual: RUAN V.<br>Seu login: Nome: Ruan / Senha: 094578"
+                credentials: `
+                    <div class="cred-header">LOGIN MARCADO ATUAL: RUAN V.</div>
+                    <div class="cred-title">Login:</div>
+                    <div class="cred-details">
+                        <span>nome: Ruan</span>
+                        <span>senha: 094578</span>
+                    </div>
+                `
             },
             {
                 id: 4,
                 name: "DIEGO B.",
                 pin: "378901",
                 gradient: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
-                credentials: "Login marcado atual: DIEGO B.<br>Seu login: Nome: Diego / Senha: 378901"
+                credentials: `
+                    <div class="cred-header">LOGIN MARCADO ATUAL: DIEGO B.</div>
+                    <div class="cred-title">Login:</div>
+                    <div class="cred-details">
+                        <span>nome: Diego</span>
+                        <span>senha: 378901</span>
+                    </div>
+                `
             },
             {
                 id: 5,
                 name: "THÉO M.",
                 pin: "769840",
                 gradient: "linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)",
-                credentials: "Login marcado atual: THÉO M.<br>Seu login: Nome: 769840 / Senha: Não informada"
+                credentials: `
+                    <div class="cred-header">LOGIN MARCADO ATUAL: THÉO M.</div>
+                    <div class="cred-title">Login:</div>
+                    <div class="cred-details">
+                        <span>nome: 769840</span>
+                        <span>senha: Não informada</span>
+                    </div>
+                `
             }
         ];
 
@@ -395,12 +453,12 @@
         // === EVENTOS DE TECLADO ===
         document.getElementById('password-input').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
-                event.preventDefault(); // Evita recarregamento de form, se houver
+                event.preventDefault(); // Evita recarregamento de form
                 validateLogin();
             }
         });
 
-        // Inicia a aplicação renderizando a primeira tela
+        // Inicia a aplicação
         renderUserList();
 
     </script>
