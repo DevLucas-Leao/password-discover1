@@ -86,6 +86,23 @@
             color: #38bdf8;
             font-weight: bold;
         }
+        .alert-use {
+            margin-top: 1.5rem;
+            color: #fbbf24;
+            font-weight: bold;
+            font-size: 1.05rem;
+            text-align: center;
+            border-top: 1px dashed #334155;
+            padding-top: 1rem;
+        }
+        .alert-use a {
+            color: #fbbf24;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+        .alert-use a:hover {
+            color: #f59e0b;
+        }
     </style>
 </head>
 <body>
@@ -108,12 +125,16 @@
             
             <p>Seu login:</p>
             <p>Nome: <span class="highlight">Arthur</span></p>
-            <p>Senha: <span class="highlight">569012</span></p>
+            <p style="margin-bottom: 0;">Senha: <span class="highlight">569012</span></p>
+            
+            <!-- Link Clicável adicionado aqui -->
+            <div class="alert-use">
+                USE EM: <a href="https://vercel.app" target="_blank" rel="noopener noreferrer">chat-sec1.vercel.app</a>
+            </div>
         </div>
     </div>
 
     <script>
-        // Executa a validação ao pressionar a tecla Enter no input
         document.getElementById('sitePassword').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 checkPassword();
@@ -126,7 +147,6 @@
             const contentCard = document.getElementById('contentCard');
             const errorMessage = document.getElementById('errorMessage');
 
-            // Senha principal do site definida por você
             if (passwordInput === '789321') {
                 loginCard.classList.add('hidden');
                 contentCard.classList.remove('hidden');
