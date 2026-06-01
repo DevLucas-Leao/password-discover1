@@ -31,7 +31,6 @@
             width: 100%;
             max-width: 500px;
             text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         h2 {
             font-size: 1.8rem;
@@ -55,7 +54,7 @@
             display: flex;
             align-items: center;
             background: rgba(15, 23, 42, 0.5);
-            padding: 1rem 1.25rem;
+            padding: 1.1rem 1.25rem;
             border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.03);
             cursor: pointer;
@@ -67,18 +66,17 @@
             border-color: rgba(56, 189, 248, 0.3);
             transform: translateX(4px);
         }
-        /* AVATAR COM INICIAL */
+        /* AVATAR COM APENAS A PRIMEIRA INICIAL */
         .avatar {
             width: 46px;
             height: 46px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #38bdf8, #818cf8);
             color: #0f172a;
             display: flex;
             justify-content: center;
             align-items: center;
             font-weight: 700;
-            font-size: 1.15rem;
+            font-size: 1.3rem;
             margin-right: 1.25rem;
             box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
             flex-shrink: 0;
@@ -87,14 +85,9 @@
             flex-grow: 1;
         }
         .user-name {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: #e2e8f0;
-        }
-        .user-meta {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-top: 0.15rem;
         }
         /* BOTÃO VOLTAR */
         .back-btn {
@@ -173,46 +166,46 @@
     <!-- TELA PRINCIPAL: SELEÇÃO DE USUÁRIOS -->
     <div id="selectionCard" class="container">
         <h2>Usuários</h2>
-        <p class="subtitle">Selecione um perfil para visualizar as credenciais de acesso</p>
+        <p class="subtitle">Selecione um perfil para acessar as credenciais</p>
         
         <div class="user-list">
+            <!-- ARTHUR G. -->
             <div class="user-card" onclick="showCredentials('arthur')">
-                <div class="avatar" style="background: linear-gradient(135deg, #38bdf8, #0ea5e9);">AG</div>
+                <div class="avatar" style="background: linear-gradient(135deg, #38bdf8, #0ea5e9);">A</div>
                 <div class="user-info">
                     <div class="user-name">ARTHUR G.</div>
-                    <div class="user-meta">Senha do painel: 789321</div>
                 </div>
             </div>
 
+            <!-- CRISTIAN L. -->
             <div class="user-card" onclick="showCredentials('cristian')">
-                <div class="avatar" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">CL</div>
+                <div class="avatar" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">C</div>
                 <div class="user-info">
                     <div class="user-name">CRISTIAN L.</div>
-                    <div class="user-meta">Senha do painel: 852465</div>
                 </div>
             </div>
 
+            <!-- RUAN V. -->
             <div class="user-card" onclick="showCredentials('ruan')">
-                <div class="avatar" style="background: linear-gradient(135deg, #34d399, #10b981);">RV</div>
+                <div class="avatar" style="background: linear-gradient(135deg, #34d399, #10b981);">R</div>
                 <div class="user-info">
                     <div class="user-name">RUAN V.</div>
-                    <div class="user-meta">Senha do painel: 094578</div>
                 </div>
             </div>
 
+            <!-- DIEGO B. -->
             <div class="user-card" onclick="showCredentials('diego')">
-                <div class="avatar" style="background: linear-gradient(135deg, #f43f5e, #e11d48);">DB</div>
+                <div class="avatar" style="background: linear-gradient(135deg, #f43f5e, #e11d48);">D</div>
                 <div class="user-info">
                     <div class="user-name">DIEGO B.</div>
-                    <div class="user-meta">Senha do painel: 378901</div>
                 </div>
             </div>
 
+            <!-- THÉO M. -->
             <div class="user-card" onclick="showCredentials('theo')">
-                <div class="avatar" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">TM</div>
+                <div class="avatar" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">T</div>
                 <div class="user-info">
                     <div class="user-name">THÉO M.</div>
-                    <div class="user-meta">Senha do painel: 769840</div>
                 </div>
             </div>
         </div>
@@ -254,7 +247,6 @@
     </div>
 
     <script>
-        // Banco de dados dinâmico estruturado conforme as instruções
         const usersDatabase = {
             arthur: {
                 marcado: "ARTHUR G.",
@@ -272,14 +264,14 @@
                 senha: "094578"
             },
             diego: {
-                marcado: "DIEGO B.",
+                marcado: "Diego",
                 nome: "Diego",
                 senha: "378901"
             },
             theo: {
                 marcado: "THÉO M.",
-                nome: "Théo",
-                senha: "769840"
+                nome: "769840", // Conforme solicitado: Nome: 769840
+                senha: "Não informada" // Mantendo estrutura limpa caso precise preencher depois
             }
         };
 
@@ -287,3 +279,12 @@
             const user = usersDatabase[userId];
             if (!user) return;
 
+            document.getElementById('labelMarcado').innerText = user.marcado;
+            document.getElementById('labelNome').innerText = user.nome;
+            document.getElementById('labelSenha').innerText = user.senha;
+
+            document.getElementById('selectionCard').classList.add('hidden');
+            document.getElementById('contentCard').classList.remove('hidden');
+        }
+
+        function showSelection() {
