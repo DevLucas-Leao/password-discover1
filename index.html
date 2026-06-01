@@ -49,6 +49,12 @@
             flex-direction: column;
             gap: 0.85rem;
         }
+        
+        /* LINQUE INTERNO DO CARD */
+        .user-link-card {
+            text-decoration: none;
+            display: block;
+        }
         .user-card {
             display: flex;
             align-items: center;
@@ -56,7 +62,6 @@
             padding: 1.1rem 1.25rem;
             border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.03);
-            cursor: pointer;
             transition: all 0.2s ease;
             text-align: left;
         }
@@ -79,13 +84,19 @@
             box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
             flex-shrink: 0;
         }
-        .user-info {
-            flex-grow: 1;
-        }
         .user-name {
             font-size: 1.1rem;
             font-weight: 600;
             color: #e2e8f0;
+        }
+        
+        /* CAMPOS DE LOGIN NATIVOS */
+        .login-box {
+            margin-top: 1.5rem;
+            background: rgba(15, 23, 42, 0.4);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         input {
             width: 100%;
@@ -113,37 +124,30 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            display: block;
+            text-decoration: none;
+            text-align: center;
         }
         .btn-primary:hover {
             background-color: #0ea5e9;
-        }
-        .error {
-            color: #ef4444;
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-            display: none;
-            font-weight: 600;
         }
         .back-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #cbd5e1;
-            padding: 0.65rem 1.25rem;
+            padding: 0.5rem 1rem;
             border-radius: 10px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: inline-block;
             margin-bottom: 1.5rem;
         }
         .back-btn:hover {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
+        
+        /* CREDENCIAIS */
         .info-block {
             text-align: left;
             background: rgba(15, 23, 42, 0.6);
@@ -172,15 +176,10 @@
             font-size: 1.3rem;
         }
         
-        /* LINK ANCORA ENVOLVENDO O BOTÃO INTEIRO */
-        .forced-link {
+        /* BOTÃO LINK FINAL TOTALMENTE HTML ANCORA */
+        .alert-use-link {
             text-decoration: none;
             display: block;
-            width: 100%;
-        }
-
-        /* BOTÃO DE DIRECIONAMENTO CORRIGIDO */
-        .alert-use-btn {
             width: 100%;
             background: rgba(251, 191, 36, 0.12);
             border: 2px solid #fbbf24;
@@ -190,99 +189,92 @@
             text-align: center;
             padding: 1.2rem;
             border-radius: 14px;
-            cursor: pointer;
             transition: background 0.2s;
-            display: block;
         }
-        .alert-use-btn:hover {
+        .alert-use-link:hover {
             background: rgba(251, 191, 36, 0.2);
-            color: #fff;
         }
-        .alert-use-btn span {
+        .alert-use-link span {
             color: #fff;
             text-decoration: underline;
         }
-        .hidden {
+
+        /* LÓGICA DE TRANSIÇÃO DE TELAS PURA POR CSS (SEM JAVASCRIPT) */
+        .page {
             display: none !important;
+        }
+        #selectionCard {
+            display: block !important;
+        }
+        
+        /* QUANDO O LINK INTERNO DA URL MUDA, O CSS ABRE A TELA SOZINHO */
+        :target {
+            display: block !important;
+        }
+        :target ~ #selectionCard {
+            display: none !important;
+        }
+        .error {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <!-- TELA 1: SELEÇÃO DE USUÁRIOS -->
-    <div id="selectionCard" class="container">
-        <h2>Usuários</h2>
-        <p class="subtitle">Selecione um perfil para fazer login</p>
-        
-        <div class="user-list">
-            <div class="user-card" onclick="selectUser('arthur')">
-                <div class="avatar" style="background: linear-gradient(135deg, #38bdf8, #0ea5e9);">A</div>
-                <div class="user-info"><div class="user-name">ARTHUR G.</div></div>
-            </div>
-
-            <div class="user-card" onclick="selectUser('cristian')">
-                <div class="avatar" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">C</div>
-                <div class="user-info"><div class="user-name">CRISTIAN L.</div></div>
-            </div>
-
-            <div class="user-card" onclick="selectUser('ruan')">
-                <div class="avatar" style="background: linear-gradient(135deg, #34d399, #10b981);">R</div>
-                <div class="user-info"><div class="user-name">RUAN V.</div></div>
-            </div>
-
-            <div class="user-card" onclick="selectUser('diego')">
-                <div class="avatar" style="background: linear-gradient(135deg, #f43f5e, #e11d48);">D</div>
-                <div class="user-info"><div class="user-name">DIEGO B.</div></div>
-            </div>
-
-            <div class="user-card" onclick="selectUser('theo')">
-                <div class="avatar" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">T</div>
-                <div class="user-info"><div class="user-name">THÉO M.</div></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TELA 2: FORMULÁRIO DE LOGIN POR SENHA -->
-    <div id="loginCard" class="container hidden">
-        <div style="text-align: left;">
-            <button class="back-btn" onclick="showSelection()">← Cancelar</button>
-        </div>
-        <h2 id="loginTitle">Entrar como Usuário</h2>
-        <p class="subtitle">Insira a chave de segurança deste perfil</p>
-        
-        <div id="errorMessage" class="error">Acesso negado. Senha incorreta.</div>
-        <input type="password" id="userPassword" placeholder="Digite a senha" autocomplete="off">
-        <button class="btn-primary" onclick="verifyPassword()">Validar Acesso</button>
-    </div>
-
-    <!-- TELA 3: DETALHES DAS CREDENCIAIS SESTRITAS -->
-    <div id="contentCard" class="container hidden">
-        <div style="text-align: left;">
-            <button class="back-btn" onclick="showSelection()">← Sair</button>
-        </div>
-        
+    <!-- ==================== TELA DE CREDENCIAIS COMPLETAS ==================== -->
+    <!-- ARTHUR -->
+    <div id="view-arthur" class="container page">
+        <a href="#" class="back-btn">← Sair</a>
         <h2>Credenciais Liberadas</h2>
-        <p class="subtitle" style="margin-bottom: 1.5rem;">Copie seus dados válidos abaixo</p>
-        
+        <p class="subtitle">Copie seus dados válidos abaixo</p>
         <div class="info-block">
-            <div class="info-row">
-                <div class="info-label">Login marcado atual</div>
-                <div id="labelMarcado" class="info-value highlight">---</div>
-            </div>
-            
-            <div style="border-top: 1px solid rgba(255,255,255,0.05); margin: 1rem 0; padding-top: 1rem;">
-                <div class="info-label" style="font-weight: 700; color: #a6adbb; margin-bottom: 0.75rem;">Seu Login</div>
-                
-                <div class="info-row" style="margin-bottom: 0.75rem;">
-                    <span style="color: #94a3b8;">Nome:</span> 
-                    <span id="labelNome" style="color: #fff; font-weight: 600; margin-left: 0.25rem;">---</span>
-                </div>
-                
-                <div class="info-row" style="margin-bottom: 0;">
-                    <span style="color: #94a3b8;">Senha:</span> 
-                    <span id="labelSenha" style="color: #38bdf8; font-weight: 600; margin-left: 0.25rem;">---</span>
-                </div>
+            <div class="info-row"><div class="info-label">Login marcado atual</div><div class="info-value highlight">ARTHUR G.</div></div>
+            <div style="border-top:1px solid rgba(255,255,255,0.05);margin:1rem 0;padding-top:1rem;">
+                <div class="info-label" style="font-weight:700;color:#a6adbb;margin-bottom:0.75rem;">Seu Login</div>
+                <div class="info-row"><span style="color:#94a3b8;">Nome:</span> <span style="color:#fff;font-weight:600;">Arthur</span></div>
+                <div class="info-row"><span style="color:#94a3b8;">Senha:</span> <span style="color:#38bdf8;font-weight:600;">569012</span></div>
             </div>
         </div>
+        <a href="https://vercel.app" class="alert-use-link">USE EM: <span>chat-sec1.vercel.app</span></a>
+    </div>
 
-        <!-- Estrutura duplicada com Link Nativo + Função Forçada via Clique de Botão -->
+    <!-- CRISTIAN -->
+    <div id="view-cristian" class="container page">
+        <a href="#" class="back-btn">← Sair</a>
+        <h2>Credenciais Liberadas</h2>
+        <p class="subtitle">Copie seus dados válidos abaixo</p>
+        <div class="info-block">
+            <div class="info-row"><div class="info-label">Login marcado atual</div><div class="info-value highlight">CRISTIAN L.</div></div>
+            <div style="border-top:1px solid rgba(255,255,255,0.05);margin:1rem 0;padding-top:1rem;">
+                <div class="info-label" style="font-weight:700;color:#a6adbb;margin-bottom:0.75rem;">Seu Login</div>
+                <div class="info-row"><span style="color:#94a3b8;">Nome:</span> <span style="color:#fff;font-weight:600;">Cristian</span></div>
+                <div class="info-row"><span style="color:#94a3b8;">Senha:</span> <span style="color:#38bdf8;font-weight:600;">032311</span></div>
+            </div>
+        </div>
+        <a href="https://vercel.app" class="alert-use-link">USE EM: <span>chat-sec1.vercel.app</span></a>
+    </div>
+
+    <!-- RUAN -->
+    <div id="view-ruan" class="container page">
+        <a href="#" class="back-btn">← Sair</a>
+        <h2>Credenciais Liberadas</h2>
+        <p class="subtitle">Copie seus dados válidos abaixo</p>
+        <div class="info-block">
+            <div class="info-row"><div class="info-label">Login marcado atual</div><div class="info-value highlight">RUAN V.</div></div>
+            <div style="border-top:1px solid rgba(255,255,255,0.05);margin:1rem 0;padding-top:1rem;">
+                <div class="info-label" style="font-weight:700;color:#a6adbb;margin-bottom:0.75rem;">Seu Login</div>
+                <div class="info-row"><span style="color:#94a3b8;">Nome:</span> <span style="color:#fff;font-weight:600;">Ruan</span></div>
+                <div class="info-row"><span style="color:#94a3b8;">Senha:</span> <span style="color:#38bdf8;font-weight:600;">094578</span></div>
+            </div>
+        </div>
+        <a href="https://vercel.app" class="alert-use-link">USE EM: <span>chat-sec1.vercel.app</span></a>
+    </div>
+
+    <!-- DIEGO -->
+    <div id="view-diego" class="container page">
+        <a href="#" class="back-btn">← Sair</a>
+        <h2>Credenciais Liberadas</h2>
