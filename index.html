@@ -3,83 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Acesso Seguro</title>
+    <title>Acesso Restrito</title>
     <style>
         /* === VARIÁVEIS & RESET === */
         :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --error: #ef4444;
-            --warning-border: #eab308;
-            --warning-text: #fef08a;
+            --bg-base: #030305;
+            --glow-red: #ff003c;
+            --glow-blue: #0051ff;
+            --glass-bg: rgba(10, 10, 15, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-shadow: 0 0 40px rgba(0, 81, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #8c9bb0;
+            --error: #ff2a5f;
+            --warning-border: #ffb700;
+            --warning-text: #ffd000;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Consolas', 'Courier New', monospace; /* Fonte com visual de terminal/secreto */
         }
 
         body {
-            background: var(--bg-gradient);
+            background-color: var(--bg-base);
+            /* Fundo animado misturando preto, vermelho escuro e azul escuro */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(255, 0, 60, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 81, 255, 0.08), transparent 25%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--text-primary);
             padding: 1.5rem;
+            overflow: hidden; /* Evita scroll durante animações */
+        }
+
+        /* === SPLASH SCREEN (TELA DE INTRODUÇÃO) === */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out, visibility 1s;
+        }
+
+        .splash-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 4px;
+            color: #fff;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--glow-blue), 0 0 20px var(--glow-red);
+            animation: pulseSplash 2s infinite alternate, glitch 3s infinite;
+            text-align: center;
+        }
+
+        @keyframes pulseSplash {
+            0% { text-shadow: 0 0 10px var(--glow-blue), 0 0 20px rgba(0, 81, 255, 0.5); transform: scale(1); }
+            100% { text-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 60, 0.5); transform: scale(1.05); }
+        }
+
+        .splash-hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.2);
+            pointer-events: none;
         }
 
         /* === GLASSMORPHISM CONTAINER === */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
+            border-top: 1px solid rgba(255, 0, 60, 0.3); /* Destaque vermelho */
+            border-bottom: 1px solid rgba(0, 81, 255, 0.3); /* Destaque azul */
+            border-radius: 20px;
             box-shadow: var(--glass-shadow);
             width: 100%;
             max-width: 420px;
             padding: 2.5rem 2rem;
             position: relative;
-            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .glass-panel.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* === UTILITÁRIOS === */
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         .screen {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            animation: fadeIn 0.4s ease forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Animação suave entre as 3 telas */
+        .screen:not(.hidden) {
+            animation: screenFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes screenFadeIn {
+            0% { opacity: 0; transform: scale(0.95); filter: blur(5px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
 
         h2 {
-            font-size: 1.75rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
+            font-size: 1.5rem;
+            font-weight: normal;
+            letter-spacing: 2px;
             margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         .subtitle {
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             margin-bottom: 1rem;
+            letter-spacing: 1px;
         }
 
         /* === TELA 1: LISTA DE USUÁRIOS === */
@@ -87,44 +141,79 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            pointer-events: none; /* Bloqueia clique até terminar a animação */
+        }
+
+        .user-list.interactive {
+            pointer-events: auto; /* Libera o clique */
         }
 
         .user-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 3px solid transparent;
+            border-radius: 12px;
             padding: 1rem 1.25rem;
             display: flex;
             align-items: center;
             gap: 1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efeito Hover Hacker */
+        .user-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .user-card:hover::before {
+            left: 100%;
         }
 
         .user-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-4px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            background: rgba(0, 81, 255, 0.1);
+            border-left: 3px solid var(--glow-blue);
+            border-color: rgba(0, 81, 255, 0.3);
+            transform: translateX(8px); /* Move levemente para a direita em vez de cima */
+            box-shadow: -5px 0 15px rgba(0, 81, 255, 0.2);
+        }
+
+        /* Classe que ativa a animação de cascata via JS */
+        .user-card.drop-in {
+            animation: cascadeDrop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes cascadeDrop {
+            0% { opacity: 0; transform: translateY(-30px) scale(0.9); filter: blur(4px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
         }
 
         .avatar {
             width: 42px;
             height: 42px;
-            border-radius: 50%;
+            border-radius: 8px; /* Mais tecnológico que redondo */
             display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: 700;
+            font-weight: bold;
             font-size: 1.2rem;
-            color: #000;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            color: #fff;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
 
         .user-name {
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            font-size: 1.05rem;
+            font-weight: normal;
+            letter-spacing: 1.5px;
+            font-size: 1rem;
         }
 
         /* === TELA 2: LOGIN === */
@@ -132,109 +221,139 @@
             background: transparent;
             border: none;
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             width: fit-content;
-            transition: color 0.2s;
+            transition: color 0.3s, transform 0.3s;
             margin-bottom: -0.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .btn-back:hover {
-            color: var(--text-primary);
+            color: var(--glow-red);
+            transform: translateX(-4px);
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            margin: 1rem 0;
+            margin: 1.5rem 0;
+            position: relative;
         }
 
         input[type="password"] {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            padding: 1rem;
-            color: white;
-            font-size: 1.5rem;
+            padding: 1.2rem;
+            color: var(--glow-blue);
+            font-size: 1.8rem;
             text-align: center;
-            letter-spacing: 0.4em;
+            letter-spacing: 0.5em;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.4s ease;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
         }
 
         input[type="password"]:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+            border-color: var(--glow-blue);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 15px rgba(0, 81, 255, 0.4);
+            color: #fff;
+            text-shadow: 0 0 8px var(--glow-blue);
         }
 
         .error-message {
             color: var(--error);
             font-size: 0.85rem;
             text-align: center;
-            font-weight: 500;
+            font-weight: normal;
+            letter-spacing: 1px;
             min-height: 20px;
+            text-transform: uppercase;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
         }
 
         .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: none;
+            background: transparent;
+            color: #fff;
+            border: 1px solid var(--glow-blue);
             border-radius: 12px;
             padding: 1rem;
             font-size: 1rem;
-            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 81, 255, 0.1);
         }
 
         .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            background: rgba(0, 81, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 81, 255, 0.5);
+            text-shadow: 0 0 8px #fff;
         }
 
         /* === TELA 3: CREDENCIAIS E SEPARAÇÃO === */
         .credentials-box {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
             padding: 1.5rem;
             margin: 1rem 0;
-            line-height: 1.6;
-            font-family: monospace;
+            line-height: 1.8;
             font-size: 0.95rem;
-            color: #cbd5e1;
+            color: #a3b8cc;
+            position: relative;
         }
 
-        /* Novas classes para a separação exigida */
+        /* Luz lateral no card de dados */
+        .credentials-box::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 10%; height: 80%; width: 2px;
+            background: var(--glow-blue);
+            box-shadow: 0 0 10px var(--glow-blue);
+        }
+
         .cred-header {
-            font-weight: 700;
-            color: white;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
             padding-bottom: 0.75rem;
             margin-bottom: 1rem;
+            letter-spacing: 1px;
         }
 
         .cred-title {
-            font-weight: 600;
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.85rem;
         }
 
         .cred-details {
             padding-left: 1rem;
-            border-left: 2px solid var(--accent);
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.5rem;
         }
 
         .cred-details span {
-            color: white;
+            color: #fff;
+            letter-spacing: 1px;
         }
 
         .alert-link {
@@ -242,48 +361,54 @@
             text-align: center;
             padding: 1rem;
             margin-top: 0.5rem;
-            border: 2px dashed var(--warning-border);
-            background: rgba(234, 179, 8, 0.05);
+            border: 1px solid var(--warning-border);
+            background: rgba(255, 183, 0, 0.05);
             color: var(--warning-text);
             text-decoration: none;
-            font-weight: 700;
+            letter-spacing: 1px;
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
         }
 
         .alert-link:hover {
-            background: rgba(234, 179, 8, 0.15);
-            transform: translateY(-2px);
+            background: rgba(255, 183, 0, 0.15);
+            box-shadow: 0 0 15px rgba(255, 183, 0, 0.3);
+            text-shadow: 0 0 5px var(--warning-text);
         }
     </style>
 </head>
 <body>
 
-    <div class="glass-panel">
+    <div id="splash-screen">
+        <div class="splash-text">Password Discover 1</div>
+    </div>
+
+    <div class="glass-panel" id="main-panel">
         
-        <div id="screen-1" class="screen">
+        <div id="screen-1" class="screen hidden">
             <div>
                 <h2>Usuários</h2>
-                <p class="subtitle">Selecione uma conta para acessar</p>
+                <p class="subtitle">Decodifique o acesso</p>
             </div>
             <div class="user-list" id="user-list-container">
                 </div>
         </div>
 
         <div id="screen-2" class="screen hidden">
-            <button class="btn-back" onclick="goToScreen(1)">← Cancelar</button>
+            <button class="btn-back" onclick="goToScreen(1)">← Abortar</button>
             <h2 id="login-title">Login</h2>
             
             <div class="input-group">
                 <input type="password" id="password-input" placeholder="••••••" inputmode="numeric" maxlength="6">
-                <div id="error-msg" class="error-message hidden">Senha incorreta. Tente novamente.</div>
+                <div id="error-msg" class="error-message hidden">Acesso Negado</div>
             </div>
             
-            <button class="btn-primary" onclick="validateLogin()">Validar Acesso</button>
+            <button class="btn-primary" onclick="validateLogin()">Iniciar Injeção</button>
         </div>
 
         <div id="screen-3" class="screen hidden">
-            <button class="btn-back" onclick="logout()">← Sair</button>
+            <button class="btn-back" onclick="logout()">← Desconectar</button>
             <h2>Credenciais</h2>
             
             <div class="credentials-box" id="credentials-content">
@@ -303,13 +428,13 @@
                 id: 1,
                 name: "ARTHUR G.",
                 pin: "789321",
-                gradient: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
+                gradient: "linear-gradient(135deg, #cc0000 0%, #330000 100%)",
                 credentials: `
                     <div class="cred-header">LOGIN MARCADO ATUAL: ARTHUR G.</div>
                     <div class="cred-title">Login:</div>
                     <div class="cred-details">
-                        <span>nome: Arthur</span>
-                        <span>senha: 569012</span>
+                        <span>NOME: Arthur</span>
+                        <span>SENHA: 569012</span>
                     </div>
                 `
             },
@@ -317,13 +442,13 @@
                 id: 2,
                 name: "CRISTIAN L.",
                 pin: "852465",
-                gradient: "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)",
+                gradient: "linear-gradient(135deg, #0022cc 0%, #000033 100%)",
                 credentials: `
                     <div class="cred-header">LOGIN MARCADO ATUAL: CRISTIAN L.</div>
                     <div class="cred-title">Login:</div>
                     <div class="cred-details">
-                        <span>nome: Cristian</span>
-                        <span>senha: 032311</span>
+                        <span>NOME: Cristian</span>
+                        <span>SENHA: 032311</span>
                     </div>
                 `
             },
@@ -331,13 +456,13 @@
                 id: 3,
                 name: "RUAN V.",
                 pin: "094578",
-                gradient: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)",
+                gradient: "linear-gradient(135deg, #333333 0%, #000000 100%)",
                 credentials: `
                     <div class="cred-header">LOGIN MARCADO ATUAL: RUAN V.</div>
                     <div class="cred-title">Login:</div>
                     <div class="cred-details">
-                        <span>nome: Ruan</span>
-                        <span>senha: 094578</span>
+                        <span>NOME: Ruan</span>
+                        <span>SENHA: 094578</span>
                     </div>
                 `
             },
@@ -345,13 +470,13 @@
                 id: 4,
                 name: "DIEGO B.",
                 pin: "378901",
-                gradient: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+                gradient: "linear-gradient(135deg, #5500aa 0%, #110022 100%)",
                 credentials: `
                     <div class="cred-header">LOGIN MARCADO ATUAL: DIEGO B.</div>
                     <div class="cred-title">Login:</div>
                     <div class="cred-details">
-                        <span>nome: Diego</span>
-                        <span>senha: 378901</span>
+                        <span>NOME: Diego</span>
+                        <span>SENHA: 378901</span>
                     </div>
                 `
             },
@@ -359,13 +484,13 @@
                 id: 5,
                 name: "THÉO M.",
                 pin: "769840",
-                gradient: "linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)",
+                gradient: "linear-gradient(135deg, #006644 0%, #001100 100%)",
                 credentials: `
                     <div class="cred-header">LOGIN MARCADO ATUAL: THÉO M.</div>
                     <div class="cred-title">Login:</div>
                     <div class="cred-details">
-                        <span>nome: 769840</span>
-                        <span>senha: Não informada</span>
+                        <span>NOME: 769840</span>
+                        <span>SENHA: Não informada</span>
                     </div>
                 `
             }
@@ -377,12 +502,14 @@
         function renderUserList() {
             const container = document.getElementById('user-list-container');
             container.innerHTML = '';
+            container.classList.remove('interactive'); // Bloqueia clique
 
-            usersDB.forEach(user => {
+            usersDB.forEach((user, index) => {
                 const initial = user.name.charAt(0).toUpperCase();
-                
                 const card = document.createElement('div');
                 card.className = 'user-card';
+                // Adiciona o delay em cascata calculando o index (0.15s entre cada card)
+                card.style.animationDelay = `${index * 0.15}s`;
                 card.onclick = () => selectUser(user);
                 
                 card.innerHTML = `
@@ -395,6 +522,36 @@
                 container.appendChild(card);
             });
         }
+
+        // === ANIMAÇÃO DE INTRODUÇÃO E CASCATA ===
+        window.onload = () => {
+            // Prepara a lista
+            renderUserList();
+
+            setTimeout(() => {
+                // Remove Splash Screen
+                const splash = document.getElementById('splash-screen');
+                splash.classList.add('splash-hidden');
+
+                setTimeout(() => {
+                    // Revela o painel principal e Tela 1
+                    document.getElementById('main-panel').classList.add('show');
+                    document.getElementById('screen-1').classList.remove('hidden');
+
+                    // Dispara a animação de cascata dos cards
+                    const cards = document.querySelectorAll('.user-card');
+                    cards.forEach(card => card.classList.add('drop-in'));
+
+                    // Libera a interatividade após o último card terminar de cair
+                    const totalAnimationTime = (usersDB.length * 150) + 600; // delay + duração
+                    setTimeout(() => {
+                        document.getElementById('user-list-container').classList.add('interactive');
+                    }, totalAnimationTime);
+
+                }, 800); // tempo para o splash sumir
+
+            }, 2500); // tempo de exibição do splash
+        };
 
         // === NAVEGAÇÃO E LÓGICA DE TELAS ===
         function selectUser(user) {
@@ -410,17 +567,36 @@
             const errorMsg = document.getElementById('error-msg');
             const password = input.value;
 
+            // Remove a classe de erro caso já esteja lá, para poder resetar a animação de "shake"
+            errorMsg.classList.add('hidden');
+            // Força um reflow para reiniciar a animação se errar 2x seguidas
+            void errorMsg.offsetWidth; 
+
             if (password === currentUser.pin) {
                 // Sucesso
-                errorMsg.classList.add('hidden');
                 input.value = '';
                 document.getElementById('credentials-content').innerHTML = currentUser.credentials;
-                goToScreen(3);
+                
+                // Animação visual rápida de sucesso no input antes de trocar de tela
+                input.style.borderColor = "#00ff66";
+                input.style.color = "#00ff66";
+                setTimeout(() => {
+                    input.style.borderColor = "";
+                    input.style.color = "";
+                    goToScreen(3);
+                }, 300);
+                
             } else {
                 // Erro
                 errorMsg.classList.remove('hidden');
-                input.value = '';
-                input.focus();
+                input.style.borderColor = "var(--error)";
+                input.style.color = "var(--error)";
+                setTimeout(() => {
+                    input.style.borderColor = "";
+                    input.style.color = "";
+                    input.value = '';
+                    input.focus();
+                }, 600);
             }
         }
 
@@ -431,20 +607,35 @@
         }
 
         function goToScreen(screenNumber) {
-            // Esconde todas
+            // Esconde todas as telas
             document.getElementById('screen-1').classList.add('hidden');
             document.getElementById('screen-2').classList.add('hidden');
             document.getElementById('screen-3').classList.add('hidden');
 
-            // Limpa estado visual de erro do input ao trocar de tela
+            // Limpa mensagens e dados
             document.getElementById('error-msg').classList.add('hidden');
             document.getElementById('password-input').value = '';
+
+            // Se estiver voltando para a tela 1, re-dispara as animações de cascata rapidamente
+            if (screenNumber === 1) {
+                const container = document.getElementById('user-list-container');
+                container.classList.remove('interactive');
+                const cards = document.querySelectorAll('.user-card');
+                cards.forEach(card => {
+                    card.classList.remove('drop-in');
+                    // Força reflow
+                    void card.offsetWidth;
+                    card.classList.add('drop-in');
+                });
+                const totalAnimationTime = (usersDB.length * 150) + 600;
+                setTimeout(() => container.classList.add('interactive'), totalAnimationTime);
+            }
 
             // Exibe a tela alvo
             const targetScreen = document.getElementById(`screen-${screenNumber}`);
             targetScreen.classList.remove('hidden');
 
-            // Focar automaticamente no input ao abrir a Tela 2
+            // Focus automático na Tela 2
             if (screenNumber === 2) {
                 setTimeout(() => document.getElementById('password-input').focus(), 100);
             }
@@ -453,13 +644,10 @@
         // === EVENTOS DE TECLADO ===
         document.getElementById('password-input').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
-                event.preventDefault(); // Evita recarregamento de form
+                event.preventDefault();
                 validateLogin();
             }
         });
-
-        // Inicia a aplicação
-        renderUserList();
 
     </script>
 </body>
