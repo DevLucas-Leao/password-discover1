@@ -3,157 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acesso Restrito</title>
+    <title>Painel de Usuários - Restrito</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
         body {
-            background-color: #0f172a;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
             color: #f8fafc;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 1.5rem;
         }
         .container {
-            background-color: #1e293b;
+            background: rgba(30, 41, 59, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         h2 {
-            margin-bottom: 1.5rem;
-            color: #38bdf8;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #f8fafc;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
-        input {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 2px solid #334155;
-            border-radius: 6px;
-            background-color: #0f172a;
-            color: white;
-            font-size: 1rem;
-            text-align: center;
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
         }
-        input:focus {
-            outline: none;
-            border-color: #38bdf8;
+        /* LISTA DE USUÁRIOS */
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
         }
-        button {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: #38bdf8;
-            color: #0f172a;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: bold;
+        .user-card {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            text-align: left;
         }
-        button:hover {
-            background-color: #0ea5e9;
+        .user-card:hover {
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateX(4px);
         }
-        .error {
-            color: #ef4444;
+        /* AVATAR COM INICIAL */
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-right: 1.25rem;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+            flex-shrink: 0;
+        }
+        .user-info {
+            flex-grow: 1;
+        }
+        .user-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        .user-meta {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.15rem;
+        }
+        /* BOTÃO VOLTAR */
+        .back-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
             font-size: 0.9rem;
-            margin-bottom: 1rem;
-            display: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
-        .hidden {
-            display: none;
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
         }
+        /* BLOCO DE NOTAS / CREDENCIAIS */
         .info-block {
             text-align: left;
-            background-color: #0f172a;
+            background: rgba(15, 23, 42, 0.6);
             padding: 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid #38bdf8;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 1.5rem;
         }
-        .info-block p {
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+        .info-row {
+            margin-bottom: 1rem;
         }
-        .highlight {
+        .info-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+        .info-value {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+        .info-value.highlight {
             color: #38bdf8;
-            font-weight: bold;
+            font-size: 1.3rem;
         }
+        /* LINK FIXO DE DIRECIONAMENTO */
         .alert-use {
-            margin-top: 1.5rem;
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px dashed rgba(251, 191, 36, 0.3);
             color: #fbbf24;
-            font-weight: bold;
-            font-size: 1.05rem;
+            font-weight: 600;
+            font-size: 1rem;
             text-align: center;
-            border-top: 1px dashed #334155;
-            padding-top: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
         }
         .alert-use a {
-            color: #fbbf24;
+            color: #f59e0b;
             text-decoration: underline;
+            margin-left: 0.25rem;
         }
         .alert-use a:hover {
-            color: #f59e0b;
+            color: #fbbf24;
+        }
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
 
-    <!-- TELA DE LOGIN -->
-    <div id="loginCard" class="container">
-        <h2>Área Restrita</h2>
-        <p style="margin-bottom: 1rem; color: #94a3b8;">Insira a senha de acesso ao site</p>
-        <div id="errorMessage" class="error">Senha incorreta. Tente novamente.</div>
-        <input type="password" id="sitePassword" placeholder="Digite a senha do site" autocomplete="off">
-        <button onclick="checkPassword()">Entrar</button>
-    </div>
+    <!-- TELA PRINCIPAL: SELEÇÃO DE USUÁRIOS -->
+    <div id="selectionCard" class="container">
+        <h2>Usuários</h2>
+        <p class="subtitle">Selecione um perfil para visualizar as credenciais de acesso</p>
+        
+        <div class="user-list">
+            <div class="user-card" onclick="showCredentials('arthur')">
+                <div class="avatar" style="background: linear-gradient(135deg, #38bdf8, #0ea5e9);">AG</div>
+                <div class="user-info">
+                    <div class="user-name">ARTHUR G.</div>
+                    <div class="user-meta">Senha do painel: 789321</div>
+                </div>
+            </div>
 
-    <!-- CONTEÚDO PRINCIPAL (OCULTO ANTES DO LOGIN) -->
-    <div id="contentCard" class="container hidden">
-        <h2>Painel de Credenciais</h2>
-        <div class="info-block">
-            <p>Login marcado atual:</p>
-            <p class="highlight" style="margin-bottom: 1.5rem;">ARTHUR G.</p>
-            
-            <p>Seu login:</p>
-            <p>Nome: <span class="highlight">Arthur</span></p>
-            <p style="margin-bottom: 0;">Senha: <span class="highlight">569012</span></p>
-            
-            <!-- Link configurado para abrir diretamente no site destino -->
-            <div class="alert-use">
-                USE EM: <a href="https://chat-sec1.vercel.app" target="_blank" rel="noopener noreferrer">chat-sec1.vercel.app</a>
+            <div class="user-card" onclick="showCredentials('cristian')">
+                <div class="avatar" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">CL</div>
+                <div class="user-info">
+                    <div class="user-name">CRISTIAN L.</div>
+                    <div class="user-meta">Senha do painel: 852465</div>
+                </div>
+            </div>
+
+            <div class="user-card" onclick="showCredentials('ruan')">
+                <div class="avatar" style="background: linear-gradient(135deg, #34d399, #10b981);">RV</div>
+                <div class="user-info">
+                    <div class="user-name">RUAN V.</div>
+                    <div class="user-meta">Senha do painel: 094578</div>
+                </div>
+            </div>
+
+            <div class="user-card" onclick="showCredentials('diego')">
+                <div class="avatar" style="background: linear-gradient(135deg, #f43f5e, #e11d48);">DB</div>
+                <div class="user-info">
+                    <div class="user-name">DIEGO B.</div>
+                    <div class="user-meta">Senha do painel: 378901</div>
+                </div>
+            </div>
+
+            <div class="user-card" onclick="showCredentials('theo')">
+                <div class="avatar" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">TM</div>
+                <div class="user-info">
+                    <div class="user-name">THÉO M.</div>
+                    <div class="user-meta">Senha do painel: 769840</div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- TELA INTERNA: DETALHES DAS CREDENCIAIS -->
+    <div id="contentCard" class="container hidden">
+        <div style="text-align: left;">
+            <button class="back-btn" onclick="showSelection()">← Voltar para Usuários</button>
+        </div>
+        
+        <h2>Credenciais de Acesso</h2>
+        <p class="subtitle" style="margin-bottom: 1.5rem;">Copie seus dados para efetuar o login</p>
+        
+        <div class="info-block">
+            <div class="info-row">
+                <div class="info-label">Login marcado atual</div>
+                <div id="labelMarcado" class="info-value highlight">---</div>
+            </div>
+            
+            <div style="border-top: 1px solid rgba(255,255,255,0.05); margin: 1rem 0; padding-top: 1rem;">
+                <div class="info-label" style="font-weight: 700; color: #a6adbb; margin-bottom: 0.75rem;">Seu Login</div>
+                
+                <div class="info-row" style="margin-bottom: 0.75rem;">
+                    <span style="color: #94a3b8;">Nome:</span> 
+                    <span id="labelNome" style="color: #fff; font-weight: 600; margin-left: 0.25rem;">---</span>
+                </div>
+                
+                <div class="info-row" style="margin-bottom: 0;">
+                    <span style="color: #94a3b8;">Senha:</span> 
+                    <span id="labelSenha" style="color: #38bdf8; font-weight: 600; margin-left: 0.25rem;">---</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-use">
+            USE EM: <a href="https://vercel.app" target="_blank" rel="noopener noreferrer">chat-sec1.vercel.app</a>
+        </div>
+    </div>
+
     <script>
-        document.getElementById('sitePassword').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkPassword();
+        // Banco de dados dinâmico estruturado conforme as instruções
+        const usersDatabase = {
+            arthur: {
+                marcado: "ARTHUR G.",
+                nome: "Arthur",
+                senha: "569012"
+            },
+            cristian: {
+                marcado: "CRISTIAN L.",
+                nome: "Cristian",
+                senha: "032311"
+            },
+            ruan: {
+                marcado: "RUAN V.",
+                nome: "Ruan",
+                senha: "094578"
+            },
+            diego: {
+                marcado: "DIEGO B.",
+                nome: "Diego",
+                senha: "378901"
+            },
+            theo: {
+                marcado: "THÉO M.",
+                nome: "Théo",
+                senha: "769840"
             }
-        });
+        };
 
-        function checkPassword() {
-            const passwordInput = document.getElementById('sitePassword').value;
-            const loginCard = document.getElementById('loginCard');
-            const contentCard = document.getElementById('contentCard');
-            const errorMessage = document.getElementById('errorMessage');
+        function showCredentials(userId) {
+            const user = usersDatabase[userId];
+            if (!user) return;
 
-            if (passwordInput === '789321') {
-                loginCard.classList.add('hidden');
-                contentCard.classList.remove('hidden');
-            } else {
-                errorMessage.style.display = 'block';
-                document.getElementById('sitePassword').value = '';
-            }
-        }
-    </script>
-</body>
-</html>
