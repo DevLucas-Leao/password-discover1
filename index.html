@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Restrito</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #1e293b;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #38bdf8;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 2px solid #334155;
+            border-radius: 6px;
+            background-color: #0f172a;
+            color: white;
+            font-size: 1rem;
+            text-align: center;
+        }
+        input:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #0ea5e9;
+        }
+        .error {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .hidden {
+            display: none;
+        }
+        .info-block {
+            text-align: left;
+            background-color: #0f172a;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #38bdf8;
+        }
+        .info-block p {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .highlight {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TELA DE LOGIN -->
+    <div id="loginCard" class="container">
+        <h2>Área Restrita</h2>
+        <p style="margin-bottom: 1rem; color: #94a3b8;">Insira a senha de acesso ao site</p>
+        <div id="errorMessage" class="error">Senha incorreta. Tente novamente.</div>
+        <input type="password" id="sitePassword" placeholder="Digite a senha do site" autocomplete="off">
+        <button onclick="checkPassword()">Entrar</button>
+    </div>
+
+    <!-- CONTEÚDO PRINCIPAL (OCULTO ANTES DO LOGIN) -->
+    <div id="contentCard" class="container hidden">
+        <h2>Painel de Credenciais</h2>
+        <div class="info-block">
+            <p>Login marcado atual:</p>
+            <p class="highlight" style="margin-bottom: 1.5rem;">ARTHUR G.</p>
+            
+            <p>Seu login:</p>
+            <p>Nome: <span class="highlight">Arthur</span></p>
+            <p>Senha: <span class="highlight">569012</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Executa a validação ao pressionar a tecla Enter no input
+        document.getElementById('sitePassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        function checkPassword() {
+            const passwordInput = document.getElementById('sitePassword').value;
+            const loginCard = document.getElementById('loginCard');
+            const contentCard = document.getElementById('contentCard');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Senha principal do site definida por você
+            if (passwordInput === '789321') {
+                loginCard.classList.add('hidden');
+                contentCard.classList.remove('hidden');
+            } else {
+                errorMessage.style.display = 'block';
+                document.getElementById('sitePassword').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
