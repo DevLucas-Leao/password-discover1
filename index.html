@@ -3,281 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Usuários - Restrito</title>
+    <title>Sistema de Acesso Seguro</title>
     <style>
+        /* === VARIÁVEIS & RESET === */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --error: #ef4444;
+            --warning-border: #eab308;
+            --warning-text: #fef08a;
+        }
+
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
+
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
-            color: #f8fafc;
+            background: var(--bg-gradient);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            color: var(--text-primary);
             padding: 1.5rem;
         }
-        .container {
-            background: rgba(30, 41, 59, 0.45);
+
+        /* === GLASSMORPHISM CONTAINER === */
+        .glass-panel {
+            background: var(--glass-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            padding: 2.5rem;
+            border: 1px solid var(--glass-border);
             border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: var(--glass-shadow);
             width: 100%;
-            max-width: 500px;
-            text-align: center;
+            max-width: 420px;
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
         }
+
+        /* === UTILITÁRIOS === */
+        .hidden {
+            display: none !important;
+        }
+
+        .screen {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         h2 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            color: #f8fafc;
+            font-size: 1.75rem;
             font-weight: 600;
             letter-spacing: -0.5px;
+            margin-bottom: 0.25rem;
         }
+
         .subtitle {
-            color: #94a3b8;
+            color: var(--text-secondary);
             font-size: 0.95rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
+
+        /* === TELA 1: LISTA DE USUÁRIOS === */
         .user-list {
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
+            gap: 1rem;
         }
+
         .user-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
             display: flex;
             align-items: center;
-            background: rgba(15, 23, 42, 0.5);
-            padding: 1.1rem 1.25rem;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            gap: 1rem;
             cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
+            transition: all 0.3s ease;
         }
+
         .user-card:hover {
-            background: rgba(56, 189, 248, 0.12);
-            border-color: rgba(56, 189, 248, 0.3);
-            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
+
         .avatar {
-            width: 46px;
-            height: 46px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            color: #0f172a;
             display: flex;
             justify-content: center;
             align-items: center;
             font-weight: 700;
-            font-size: 1.3rem;
-            margin-right: 1.25rem;
-            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
-            flex-shrink: 0;
+            font-size: 1.2rem;
+            color: #000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
+
         .user-name {
-            font-size: 1.1rem;
             font-weight: 600;
-            color: #e2e8f0;
-        }
-        input {
-            width: 100%;
-            padding: 0.85rem;
-            margin-bottom: 1rem;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            background-color: #0f172a;
-            color: white;
-            font-size: 1.1rem;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-        input:focus {
-            outline: none;
-            border-color: #38bdf8;
-        }
-        .btn-primary {
-            width: 100%;
-            padding: 0.85rem;
-            background-color: #38bdf8;
-            color: #0f172a;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-primary:hover {
-            background-color: #0ea5e9;
-        }
-        .error {
-            color: #ef4444;
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-            display: none;
-            font-weight: 600;
-        }
-        .back-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #cbd5e1;
-            padding: 0.65rem 1.25rem;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
-        .info-block {
-            text-align: left;
-            background: rgba(15, 23, 42, 0.6);
-            padding: 1.5rem;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 1.5rem;
-        }
-        .info-row {
-            margin-bottom: 1rem;
-        }
-        .info-label {
-            font-size: 0.85rem;
-            color: #64748b;
-            text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 0.25rem;
+            font-size: 1.05rem;
         }
-        .info-value {
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: #f1f5f9;
+
+        /* === TELA 2: LOGIN === */
+        .btn-back {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            transition: color 0.2s;
+            margin-bottom: -0.5rem;
         }
-        .info-value.highlight {
-            color: #38bdf8;
-            font-size: 1.3rem;
+
+        .btn-back:hover {
+            color: var(--text-primary);
         }
-        .alert-use-link {
-            text-decoration: none;
-            display: block;
-            width: 100%;
-            background: rgba(251, 191, 36, 0.12);
-            border: 2px solid #fbbf24;
-            color: #fbbf24;
-            font-weight: 700;
-            font-size: 1.1rem;
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        input[type="password"] {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            font-size: 1.5rem;
             text-align: center;
-            padding: 1.2rem;
-            border-radius: 14px;
-            transition: background 0.2s;
+            letter-spacing: 0.4em; /* Espaçamento exigido para senhas numéricas */
+            outline: none;
+            transition: border-color 0.3s;
         }
-        .alert-use-link:hover {
-            background: rgba(251, 191, 36, 0.2);
+
+        input[type="password"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
         }
-        .alert-use-link span {
-            color: #fff;
-            text-decoration: underline;
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            text-align: center;
+            font-weight: 500;
+            min-height: 20px;
         }
-        .hidden {
-            display: none !important;
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        /* === TELA 3: CREDENCIAIS === */
+        .credentials-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            line-height: 1.6;
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        .credentials-box strong {
+            color: white;
+        }
+
+        .alert-link {
+            display: block;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            border: 2px dashed var(--warning-border);
+            background: rgba(234, 179, 8, 0.05);
+            color: var(--warning-text);
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .alert-link:hover {
+            background: rgba(234, 179, 8, 0.15);
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
 
-    <!-- TELA 1: LISTA PRINCIPAL DE USUÁRIOS -->
-    <div id="selectionCard" class="container">
-        <h2>Usuários</h2>
-        <p class="subtitle">Selecione um perfil para fazer login</p>
+    <div class="glass-panel">
         
-        <div class="user-list">
-            <div class="user-card" onclick="openLogin('arthur')">
-                <div class="avatar" style="background: linear-gradient(135deg, #38bdf8, #0ea5e9);">A</div>
-                <div class="user-info"><div class="user-name">ARTHUR G.</div></div>
+        <div id="screen-1" class="screen">
+            <div>
+                <h2>Usuários</h2>
+                <p class="subtitle">Selecione uma conta para acessar</p>
             </div>
-
-            <div class="user-card" onclick="openLogin('cristian')">
-                <div class="avatar" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);">C</div>
-                <div class="user-info"><div class="user-name">CRISTIAN L.</div></div>
-            </div>
-
-            <div class="user-card" onclick="openLogin('ruan')">
-                <div class="avatar" style="background: linear-gradient(135deg, #34d399, #10b981);">R</div>
-                <div class="user-info"><div class="user-name">RUAN V.</div></div>
-            </div>
-
-            <div class="user-card" onclick="openLogin('diego')">
-                <div class="avatar" style="background: linear-gradient(135deg, #f43f5e, #e11d48);">D</div>
-                <div class="user-info"><div class="user-name">DIEGO B.</div></div>
-            </div>
-
-            <div class="user-card" onclick="openLogin('theo')">
-                <div class="avatar" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">T</div>
-                <div class="user-info"><div class="user-name">THÉO M.</div></div>
-            </div>
+            <div class="user-list" id="user-list-container">
+                </div>
         </div>
-    </div>
 
-    <!-- TELA 2: FORMULÁRIO DE LOGIN POR SENHA -->
-    <div id="loginCard" class="container hidden">
-        <div style="text-align: left;">
-            <button type="button" class="back-btn" onclick="backToSelection()">← Cancelar</button>
-        </div>
-        <h2 id="loginTitle">Entrar como Usuário</h2>
-        <p class="subtitle">Insira a chave de segurança deste perfil</p>
-        
-        <div id="errorMessage" class="error">Acesso negado. Senha incorreta.</div>
-        <input type="password" id="userPassword" placeholder="Digite a senha" autocomplete="off">
-        <button type="button" class="btn-primary" onclick="verifyGatePassword()">Validar Acesso</button>
-    </div>
-
-    <!-- TELA 3: EXIBIÇÃO DE CREDENCIAIS INTERNAS -->
-    <div id="contentCard" class="container hidden">
-        <div style="text-align: left;">
-            <button type="button" class="back-btn" onclick="backToSelection()">← Sair</button>
-        </div>
-        
-        <h2>Credenciais Liberadas</h2>
-        <p class="subtitle" style="margin-bottom: 1.5rem;">Copie seus dados válidos abaixo</p>
-        
-        <div class="info-block">
-            <div class="info-row">
-                <div class="info-label">Login marcado atual</div>
-                <div id="labelMarcado" class="info-value highlight">---</div>
+        <div id="screen-2" class="screen hidden">
+            <button class="btn-back" onclick="goToScreen(1)">← Cancelar</button>
+            <h2 id="login-title">Login</h2>
+            
+            <div class="input-group">
+                <input type="password" id="password-input" placeholder="••••••" inputmode="numeric" maxlength="6">
+                <div id="error-msg" class="error-message hidden">Senha incorreta. Tente novamente.</div>
             </div>
             
-            <div style="border-top: 1px solid rgba(255,255,255,0.05); margin: 1rem 0; padding-top: 1rem;">
-                <div class="info-label" style="font-weight: 700; color: #a6adbb; margin-bottom: 0.75rem;">Seu Login</div>
-                
-                <div class="info-row" style="margin-bottom: 0.75rem;">
-                    <span style="color: #94a3b8;">Nome:</span> 
-                    <span id="labelNome" style="color: #fff; font-weight: 600; margin-left: 0.25rem;">---</span>
-                </div>
-                
-                <div class="info-row" style="margin-bottom: 0;">
-                    <span style="color: #94a3b8;">Senha:</span> 
-                    <span id="labelSenha" style="color: #38bdf8; font-weight: 600; margin-left: 0.25rem;">---</span>
-                </div>
-            </div>
+            <button class="btn-primary" onclick="validateLogin()">Validar Acesso</button>
         </div>
 
-        <a href="https://vercel.app" class="alert-use-link">
-            USE EM: <span>chat-sec1.vercel.app</span>
-        </a>
+        <div id="screen-3" class="screen hidden">
+            <button class="btn-back" onclick="logout()">← Sair</button>
+            <h2>Credenciais</h2>
+            
+            <div class="credentials-box" id="credentials-content">
+                </div>
+            
+            <a href="https://vercel.app" target="_blank" rel="noopener noreferrer" class="alert-link">
+                USE EM: chat-sec1.vercel.app
+            </a>
+        </div>
+
     </div>
 
     <script>
-        // Banco de dados contendo senhas de acesso e os dados internos correspondentes
-        const usersDatabase = {
-            arthur: { key: "789321", marcado: "ARTHUR G.", nome: "Arthur", senha: "569012" },
+        // === BANCO DE DADOS EM MEMÓRIA ===
+        const usersDB = [
+            {
+                id: 1,
+                name: "ARTHUR G.",
+                pin: "789321",
+                gradient: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
+                credentials: "Login marcado atual: ARTHUR G.<br>Seu login: Nome: Arthur / Senha: 569012"
+            },
+            {
+                id: 2,
+                name: "CRISTIAN L.",
+                pin: "852465",
+                gradient: "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)",
+                credentials: "Login marcado atual: CRISTIAN L.<br>Seu login: Nome: Cristian / Senha: 032311"
+            },
+            {
+                id: 3,
+                name: "RUAN V.",
+                pin: "094578",
+                gradient: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)",
+                credentials: "Login marcado atual: RUAN V.<br>Seu login: Nome: Ruan / Senha: 094578"
+            },
+            {
+                id: 4,
+                name: "DIEGO B.",
+                pin: "378901",
+                gradient: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+                credentials: "Login marcado atual: DIEGO B.<br>Seu login: Nome: Diego / Senha: 378901"
+            },
+            {
+                id: 5,
+                name: "THÉO M.",
+                pin: "769840",
+                gradient: "linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)",
+                credentials: "Login marcado atual: THÉO M.<br>Seu login: Nome: 769840 / Senha: Não informada"
+            }
+        ];
+
+        let currentUser = null;
+
+        // === INICIALIZAÇÃO TELA 1 ===
+        function renderUserList() {
+            const container = document.getElementById('user-list-container');
+            container.innerHTML = '';
+
+            usersDB.forEach(user => {
+                const initial = user.name.charAt(0).toUpperCase();
+                
+                const card = document.createElement('div');
+                card.className = 'user-card';
+                card.onclick = () => selectUser(user);
+                
+                card.innerHTML = `
+                    <div class="avatar" style="background: ${user.gradient}">
+                        ${initial}
+                    </div>
+                    <span class="user-name">${user.name}</span>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // === NAVEGAÇÃO E LÓGICA DE TELAS ===
+        function selectUser(user) {
+            currentUser = user;
+            document.getElementById('login-title').innerText = `Login: ${user.name}`;
+            goToScreen(2);
+        }
+
+        function validateLogin() {
+            if (!currentUser) return;
+
+            const input = document.getElementById('password-input');
+            const errorMsg = document.getElementById('error-msg');
+            const password = input.value;
+
+            if (password === currentUser.pin) {
+                // Sucesso
+                errorMsg.classList.add('hidden');
+                input.value = '';
+                document.getElementById('credentials-content').innerHTML = currentUser.credentials;
+                goToScreen(3);
+            } else {
+                // Erro
+                errorMsg.classList.remove('hidden');
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('credentials-content').innerHTML = '';
+            goToScreen(1);
+        }
+
+        function goToScreen(screenNumber) {
+            // Esconde todas
+            document.getElementById('screen-1').classList.add('hidden');
+            document.getElementById('screen-2').classList.add('hidden');
+            document.getElementById('screen-3').classList.add('hidden');
+
+            // Limpa estado visual de erro do input ao trocar de tela
+            document.getElementById('error-msg').classList.add('hidden');
+            document.getElementById('password-input').value = '';
+
+            // Exibe a tela alvo
+            const targetScreen = document.getElementById(`screen-${screenNumber}`);
+            targetScreen.classList.remove('hidden');
+
+            // Focar automaticamente no input ao abrir a Tela 2
+            if (screenNumber === 2) {
+                setTimeout(() => document.getElementById('password-input').focus(), 100);
+            }
+        }
+
+        // === EVENTOS DE TECLADO ===
+        document.getElementById('password-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Evita recarregamento de form, se houver
+                validateLogin();
+            }
+        });
+
+        // Inicia a aplicação renderizando a primeira tela
+        renderUserList();
+
+    </script>
+</body>
+</html>
