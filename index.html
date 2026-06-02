@@ -111,39 +111,50 @@
             100% { transform: translateX(100%); opacity: 0; }
         }
 
-        /* === SPLASH SCREEN (PORTAS SE ABRINDO) === */
-        #splash-screen {
-            position: fixed;
-            inset: 0;
+        /* === SPLASH SCREEN (TEXTO ESTILO JOGOS) === */
+        #splash-text-container {
             z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
         }
 
-        /* As metades da tela (Portas) */
-        .splash-door {
-            position: absolute;
-            top: 0;
-            width: 50.1vw; /* .1 evita linha fina de gap */
-            height: 100vh;
-            background: #000;
-            pointer-events: auto;
-            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1);
-            z-index: 9998;
+        #splash-text-container.hide {
+            opacity: 0;
+            transform: scale(0.8) rotate(-5deg); /* Animação de saída estilizada */
+            filter: blur(15px);
         }
 
-        .door-left {
-            left: 0;
-            border-right: 2px solid var(--glow-red);
-            box-shadow: inset -20px 0 50px rgba(255,0,60,0.1);
+        .splash-text {
+            font-family: 'Impact', 'Arial Black', sans-serif; /* Fonte grossa e marcante */
+            font-size: 3.8rem; /* Bem maior e destacado */
+            font-weight: 900;
+            font-style: italic; /* Inclinada estilo jogos */
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #000000; /* Cor interna preta para dar contraste com as bordas e o brilho */
+            
+            /* Contorno nítido nas cores do tema + sombra de Neon */
+            text-shadow: 
+                -2px -2px 0 var(--glow-red),  
+                 2px -2px 0 var(--glow-red),
+                -2px  2px 0 var(--glow-blue),
+                 2px  2px 0 var(--glow-blue),
+                 0px  0px 20px var(--glow-blue),
+                 0px  0px 40px var(--glow-red);
+                 
+            animation: gamePulse 1.5s infinite alternate;
+            text-align: center;
+            user-select: none;
         }
 
-        .door-right {
-            right: 0;
-            border-left: 2px solid var(--glow-blue);
-            box-shadow: inset 20px 0 50px rgba(0,81,255,0.1);
+        @keyframes gamePulse {
+            0% { 
+                transform: scale(1) skewX(-5deg);
+                filter: drop-shadow(0 0 10px rgba(0, 81, 255, 0.6));
+            }
+            100% { 
+                transform: scale(1.03) skewX(-5deg);
+                filter: drop-shadow(0 0 25px rgba(255, 0, 60, 0.8));
+            }
         }
 
         /* Classes ativadas pelo JS para abrir */
