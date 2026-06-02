@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acesso Restrito</title>
+    <title>Acesso Restrito - Nível 1</title>
     <style>
         /* === VARIÁVEIS & RESET === */
         :root {
-            --bg-base: #030305;
+            --bg-base: #020203;
             --glow-red: #ff003c;
             --glow-blue: #0051ff;
-            --glass-bg: rgba(10, 10, 15, 0.6);
+            --pure-white: #ffffff;
+            --pure-black: #000000;
+            
+            --glass-bg: rgba(10, 10, 15, 0.65);
             --glass-border: rgba(255, 255, 255, 0.05);
-            --glass-shadow: 0 0 40px rgba(0, 81, 255, 0.15);
+            --glass-shadow: 0 0 50px rgba(0, 81, 255, 0.15);
+            
             --text-primary: #ffffff;
             --text-secondary: #8c9bb0;
             --error: #ff2a5f;
@@ -24,34 +28,138 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Consolas', 'Courier New', monospace; /* Fonte com visual de terminal/secreto */
+            font-family: 'Consolas', 'Courier New', monospace;
         }
 
         body {
             background-color: var(--bg-base);
-            /* Fundo animado misturando preto, vermelho escuro e azul escuro */
             background-image: 
-                radial-gradient(circle at 15% 50%, rgba(255, 0, 60, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(0, 81, 255, 0.08), transparent 25%);
+                radial-gradient(circle at 20% 40%, rgba(255, 0, 60, 0.05), transparent 30%),
+                radial-gradient(circle at 80% 60%, rgba(0, 81, 255, 0.05), transparent 30%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--text-primary);
             padding: 1.5rem;
-            overflow: hidden; /* Evita scroll durante animações */
+            overflow: hidden;
         }
 
-        /* === SPLASH SCREEN (TELA DE INTRODUÇÃO) === */
+        /* === ANIMAÇÕES DE LINHAS DE FUNDO === */
+        .cyber-lines-container {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .c-line {
+            position: absolute;
+            width: 150%;
+            left: -25%;
+            height: 2px;
+            opacity: 0;
+            filter: blur(1px);
+        }
+
+        /* Linha Vermelha */
+        .c-line.red {
+            top: 15%;
+            background: linear-gradient(90deg, transparent, var(--glow-red), transparent);
+            box-shadow: 0 0 15px var(--glow-red);
+            animation: shootLine 3s linear infinite 0.2s;
+        }
+
+        /* Linha Azul */
+        .c-line.blue {
+            top: 45%;
+            background: linear-gradient(90deg, transparent, var(--glow-blue), transparent);
+            box-shadow: 0 0 15px var(--glow-blue);
+            animation: shootLine 4s linear infinite 1.5s;
+        }
+
+        /* Linha Branca */
+        .c-line.white {
+            top: 75%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--pure-white), transparent);
+            box-shadow: 0 0 8px var(--pure-white);
+            animation: shootLine 2.5s linear infinite 0.8s;
+        }
+
+        /* Linha Preta (grossa, cria um efeito de "corte/glitch" no fundo) */
+        .c-line.black {
+            top: 30%;
+            height: 6px;
+            background: var(--pure-black);
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+            animation: shootLine 5s linear infinite 0s;
+        }
+        
+        .c-line.black-2 {
+            top: 85%;
+            height: 10px;
+            background: var(--pure-black);
+            animation: shootLine 3.5s linear infinite 2s;
+        }
+
+        @keyframes shootLine {
+            0% { transform: translateX(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* === SPLASH SCREEN (PORTAS SE ABRINDO) === */
         #splash-screen {
             position: fixed;
             inset: 0;
-            background: #000;
             z-index: 9999;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease-in-out, transform 1s ease-in-out, visibility 1s;
+            pointer-events: none;
+        }
+
+        /* As metades da tela (Portas) */
+        .splash-door {
+            position: absolute;
+            top: 0;
+            width: 50.1vw; /* .1 evita linha fina de gap */
+            height: 100vh;
+            background: #000;
+            pointer-events: auto;
+            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1);
+            z-index: 9998;
+        }
+
+        .door-left {
+            left: 0;
+            border-right: 2px solid var(--glow-red);
+            box-shadow: inset -20px 0 50px rgba(255,0,60,0.1);
+        }
+
+        .door-right {
+            right: 0;
+            border-left: 2px solid var(--glow-blue);
+            box-shadow: inset 20px 0 50px rgba(0,81,255,0.1);
+        }
+
+        /* Classes ativadas pelo JS para abrir */
+        .door-left.open { transform: translateX(-100%); }
+        .door-right.open { transform: translateX(100%); }
+
+        /* Container do Texto do Splash */
+        #splash-text-container {
+            z-index: 9999;
+            transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+        }
+
+        #splash-text-container.hide {
+            opacity: 0;
+            transform: scale(1.3);
+            filter: blur(10px);
         }
 
         .splash-text {
@@ -70,35 +178,29 @@
             100% { text-shadow: 0 0 15px var(--glow-red), 0 0 30px rgba(255, 0, 60, 0.5); transform: scale(1.05); }
         }
 
-        .splash-hidden {
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(1.2);
-            pointer-events: none;
-        }
-
         /* === GLASSMORPHISM CONTAINER === */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid rgba(255, 0, 60, 0.3); /* Destaque vermelho */
-            border-bottom: 1px solid rgba(0, 81, 255, 0.3); /* Destaque azul */
+            border-top: 2px solid rgba(255, 0, 60, 0.4);
+            border-bottom: 2px solid rgba(0, 81, 255, 0.4);
             border-radius: 20px;
             box-shadow: var(--glass-shadow);
             width: 100%;
             max-width: 420px;
             padding: 2.5rem 2rem;
             position: relative;
+            z-index: 10; /* Acima das linhas de fundo */
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(40px) scale(0.95);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .glass-panel.show {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
         /* === UTILITÁRIOS === */
@@ -110,7 +212,6 @@
             gap: 1.5rem;
         }
 
-        /* Animação suave entre as 3 telas */
         .screen:not(.hidden) {
             animation: screenFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
@@ -141,11 +242,11 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            pointer-events: none; /* Bloqueia clique até terminar a animação */
+            pointer-events: none;
         }
 
         .user-list.interactive {
-            pointer-events: auto; /* Libera o clique */
+            pointer-events: auto;
         }
 
         .user-card {
@@ -159,13 +260,12 @@
             gap: 1rem;
             cursor: pointer;
             opacity: 0;
-            transform: translateY(-20px);
+            transform: translateY(-30px);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
 
-        /* Efeito Hover Hacker */
         .user-card::before {
             content: '';
             position: absolute;
@@ -174,32 +274,29 @@
             transition: 0.5s;
         }
 
-        .user-card:hover::before {
-            left: 100%;
-        }
+        .user-card:hover::before { left: 100%; }
 
         .user-card:hover {
             background: rgba(0, 81, 255, 0.1);
             border-left: 3px solid var(--glow-blue);
             border-color: rgba(0, 81, 255, 0.3);
-            transform: translateX(8px); /* Move levemente para a direita em vez de cima */
+            transform: translateX(8px);
             box-shadow: -5px 0 15px rgba(0, 81, 255, 0.2);
         }
 
-        /* Classe que ativa a animação de cascata via JS */
         .user-card.drop-in {
             animation: cascadeDrop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         @keyframes cascadeDrop {
-            0% { opacity: 0; transform: translateY(-30px) scale(0.9); filter: blur(4px); }
+            0% { opacity: 0; transform: translateY(-40px) scale(0.9); filter: blur(8px); }
             100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
         }
 
         .avatar {
             width: 42px;
             height: 42px;
-            border-radius: 8px; /* Mais tecnológico que redondo */
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -216,7 +313,7 @@
             font-size: 1rem;
         }
 
-        /* === TELA 2: LOGIN === */
+        /* === TELA 2 & 3: FORMULÁRIOS E DADOS === */
         .btn-back {
             background: transparent;
             border: none;
@@ -307,7 +404,7 @@
             text-shadow: 0 0 8px #fff;
         }
 
-        /* === TELA 3: CREDENCIAIS E SEPARAÇÃO === */
+        /* TELA 3 */
         .credentials-box {
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -320,7 +417,6 @@
             position: relative;
         }
 
-        /* Luz lateral no card de dados */
         .credentials-box::before {
             content: '';
             position: absolute;
@@ -351,10 +447,7 @@
             gap: 0.5rem;
         }
 
-        .cred-details span {
-            color: #fff;
-            letter-spacing: 1px;
-        }
+        .cred-details span { color: #fff; letter-spacing: 1px; }
 
         .alert-link {
             display: block;
@@ -380,8 +473,21 @@
 </head>
 <body>
 
+    <div class="cyber-lines-container">
+        <div class="c-line red"></div>
+        <div class="c-line blue"></div>
+        <div class="c-line white"></div>
+        <div class="c-line black"></div>
+        <div class="c-line black-2"></div>
+    </div>
+
     <div id="splash-screen">
-        <div class="splash-text">Password Discover 1</div>
+        <div class="splash-door door-left" id="door-l"></div>
+        <div class="splash-door door-right" id="door-r"></div>
+        
+        <div id="splash-text-container">
+            <div class="splash-text">Password Discover 1</div>
+        </div>
     </div>
 
     <div class="glass-panel" id="main-panel">
@@ -418,7 +524,6 @@
                 USE EM: chat-sec1.vercel.app
             </a>
         </div>
-
     </div>
 
     <script>
@@ -502,58 +607,63 @@
         function renderUserList() {
             const container = document.getElementById('user-list-container');
             container.innerHTML = '';
-            container.classList.remove('interactive'); // Bloqueia clique
+            container.classList.remove('interactive'); 
 
             usersDB.forEach((user, index) => {
                 const initial = user.name.charAt(0).toUpperCase();
                 const card = document.createElement('div');
                 card.className = 'user-card';
-                // Adiciona o delay em cascata calculando o index (0.15s entre cada card)
+                // Delay progressivo para a cascata
                 card.style.animationDelay = `${index * 0.15}s`;
                 card.onclick = () => selectUser(user);
                 
                 card.innerHTML = `
-                    <div class="avatar" style="background: ${user.gradient}">
-                        ${initial}
-                    </div>
+                    <div class="avatar" style="background: ${user.gradient}">${initial}</div>
                     <span class="user-name">${user.name}</span>
                 `;
-                
                 container.appendChild(card);
             });
         }
 
-        // === ANIMAÇÃO DE INTRODUÇÃO E CASCATA ===
+        // === FLUXO DE INTRODUÇÃO (MÁQUINA DE ESTADOS VISUAIS) ===
         window.onload = () => {
-            // Prepara a lista
             renderUserList();
 
+            // 1. Aguarda 2 segundos com o texto pulsando, depois esconde o texto
             setTimeout(() => {
-                // Remove Splash Screen
-                const splash = document.getElementById('splash-screen');
-                splash.classList.add('splash-hidden');
+                document.getElementById('splash-text-container').classList.add('hide');
 
+                // 2. Aguarda a animação do texto sumir (0.4s), depois ABRE AS PORTAS
                 setTimeout(() => {
-                    // Revela o painel principal e Tela 1
-                    document.getElementById('main-panel').classList.add('show');
-                    document.getElementById('screen-1').classList.remove('hidden');
+                    document.getElementById('door-l').classList.add('open');
+                    document.getElementById('door-r').classList.add('open');
 
-                    // Dispara a animação de cascata dos cards
-                    const cards = document.querySelectorAll('.user-card');
-                    cards.forEach(card => card.classList.add('drop-in'));
-
-                    // Libera a interatividade após o último card terminar de cair
-                    const totalAnimationTime = (usersDB.length * 150) + 600; // delay + duração
+                    // 3. Aguarda as portas começarem a abrir para revelar o painel central
                     setTimeout(() => {
-                        document.getElementById('user-list-container').classList.add('interactive');
-                    }, totalAnimationTime);
+                        // Oculta o splash container para não bloquear cliques futuros
+                        setTimeout(() => {
+                            document.getElementById('splash-screen').style.display = 'none';
+                        }, 1000);
 
-                }, 800); // tempo para o splash sumir
+                        document.getElementById('main-panel').classList.add('show');
+                        document.getElementById('screen-1').classList.remove('hidden');
 
-            }, 2500); // tempo de exibição do splash
+                        // 4. Inicia a queda (cascata) dos cards de usuário
+                        const cards = document.querySelectorAll('.user-card');
+                        cards.forEach(card => card.classList.add('drop-in'));
+
+                        // 5. Libera o clique nos cards assim que a última animação acabar
+                        const totalTime = (usersDB.length * 150) + 600;
+                        setTimeout(() => {
+                            document.getElementById('user-list-container').classList.add('interactive');
+                        }, totalTime);
+
+                    }, 600); // tempo de transição leve sobreposto com as portas
+                }, 500);
+            }, 2000);
         };
 
-        // === NAVEGAÇÃO E LÓGICA DE TELAS ===
+        // === LÓGICA DE TELAS E LOGIN ===
         function selectUser(user) {
             currentUser = user;
             document.getElementById('login-title').innerText = `Login: ${user.name}`;
@@ -567,17 +677,13 @@
             const errorMsg = document.getElementById('error-msg');
             const password = input.value;
 
-            // Remove a classe de erro caso já esteja lá, para poder resetar a animação de "shake"
             errorMsg.classList.add('hidden');
-            // Força um reflow para reiniciar a animação se errar 2x seguidas
             void errorMsg.offsetWidth; 
 
             if (password === currentUser.pin) {
-                // Sucesso
                 input.value = '';
                 document.getElementById('credentials-content').innerHTML = currentUser.credentials;
                 
-                // Animação visual rápida de sucesso no input antes de trocar de tela
                 input.style.borderColor = "#00ff66";
                 input.style.color = "#00ff66";
                 setTimeout(() => {
@@ -587,7 +693,6 @@
                 }, 300);
                 
             } else {
-                // Erro
                 errorMsg.classList.remove('hidden');
                 input.style.borderColor = "var(--error)";
                 input.style.color = "var(--error)";
@@ -607,48 +712,39 @@
         }
 
         function goToScreen(screenNumber) {
-            // Esconde todas as telas
             document.getElementById('screen-1').classList.add('hidden');
             document.getElementById('screen-2').classList.add('hidden');
             document.getElementById('screen-3').classList.add('hidden');
 
-            // Limpa mensagens e dados
             document.getElementById('error-msg').classList.add('hidden');
             document.getElementById('password-input').value = '';
 
-            // Se estiver voltando para a tela 1, re-dispara as animações de cascata rapidamente
+            // Refaz a cascata ao voltar para a Tela 1
             if (screenNumber === 1) {
                 const container = document.getElementById('user-list-container');
                 container.classList.remove('interactive');
                 const cards = document.querySelectorAll('.user-card');
                 cards.forEach(card => {
                     card.classList.remove('drop-in');
-                    // Força reflow
-                    void card.offsetWidth;
+                    void card.offsetWidth; // force reflow
                     card.classList.add('drop-in');
                 });
-                const totalAnimationTime = (usersDB.length * 150) + 600;
-                setTimeout(() => container.classList.add('interactive'), totalAnimationTime);
+                setTimeout(() => container.classList.add('interactive'), (usersDB.length * 150) + 600);
             }
 
-            // Exibe a tela alvo
-            const targetScreen = document.getElementById(`screen-${screenNumber}`);
-            targetScreen.classList.remove('hidden');
+            document.getElementById(`screen-${screenNumber}`).classList.remove('hidden');
 
-            // Focus automático na Tela 2
             if (screenNumber === 2) {
                 setTimeout(() => document.getElementById('password-input').focus(), 100);
             }
         }
 
-        // === EVENTOS DE TECLADO ===
         document.getElementById('password-input').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 validateLogin();
             }
         });
-
     </script>
 </body>
 </html>
