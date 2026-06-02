@@ -42,7 +42,7 @@
             align-items: center;
             color: var(--text-primary);
             padding: 1.5rem;
-            overflow: hidden;
+            overflow: hidden; /* Impede scroll na página toda */
         }
 
         /* === LINHAS FLUTUANTES NO FUNDO === */
@@ -98,7 +98,7 @@
             100% { transform: translateX(100%) rotate(-1deg); opacity: 0; }
         }
 
-        /* === SPLASH SCREEN (PORTA COM CORTE INCLINADO / ) === */
+        /* === SPLASH SCREEN === */
         #splash-screen {
             position: fixed;
             inset: 0;
@@ -119,19 +119,16 @@
             will-change: transform;
         }
 
-        /* Divisão Superior Esquerda usando a inclinação / */
         .door-left {
             clip-path: polygon(0 0, 100% 0, 0 100%);
             border-bottom: 2px solid var(--glow-red);
         }
 
-        /* Divisão Inferior Direita usando a inclinação / */
         .door-right {
             clip-path: polygon(100% 0, 100% 100%, 0 100%);
             border-top: 2px solid var(--glow-blue);
         }
 
-        /* Animação corrigida acompanhando perfeitamente a linha diagonal inclinada */
         .door-left.open {
             transform: translate(-100%, -100%);
             opacity: 0;
@@ -142,7 +139,6 @@
             opacity: 0;
         }
 
-        /* Texto do Splash Estilo Jogo */
         #splash-text-container {
             z-index: 9999;
             transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
@@ -161,9 +157,7 @@
             font-style: italic;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: var(--pure-white); /* Cor interna alterada para Branco Puro conforme solicitado */
-            
-            /* Contorno duplo com Neon mantido */
+            color: var(--pure-white);
             text-shadow: 
                 -2px -2px 0 var(--glow-red),  
                  2px -2px 0 var(--glow-red),
@@ -198,9 +192,13 @@
             opacity: 0;
             transform: translateY(50px);
             transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            
+            /* Limita o tamanho máximo do painel */
+            max-height: 540px; 
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Linhas Estilizadas de Detalhe nas Bordas do Painel */
         .glass-panel::before, .glass-panel::after {
             content: '';
             position: absolute;
@@ -222,6 +220,8 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            height: 100%;
+            overflow: hidden;
         }
 
         .screen:not(.hidden) {
@@ -249,12 +249,32 @@
             letter-spacing: 1px;
         }
 
-        /* === TELA 1: LISTA DE USUÁRIOS COM LINHAS AO PASSAR O MOUSE === */
+        /* === TELA 1: LISTA DE USUÁRIOS COM SCROLL INTERNO === */
         .user-list {
             display: flex;
             flex-direction: column;
             gap: 1rem;
             pointer-events: none;
+            
+            /* Ativa rolagem interna apenas nesta seção */
+            overflow-y: auto;
+            max-height: 320px;
+            padding-right: 6px;
+        }
+
+        /* Estilização da barra de rolagem (Scrollbar Cyber) */
+        .user-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .user-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .user-list::-webkit-scrollbar-thumb {
+            background: rgba(0, 81, 255, 0.3);
+            border-radius: 2px;
+        }
+        .user-list::-webkit-scrollbar-thumb:hover {
+            background: var(--glow-blue);
         }
 
         .user-list.interactive {
@@ -275,9 +295,9 @@
             transition: all 0.35s cubic-bezier(0.215, 0.610, 0.355, 1);
             position: relative;
             overflow: hidden;
+            flex-shrink: 0; /* Impede que os cards amassem */
         }
 
-        /* Linhas Neon internas que varrem o card ao passar o mouse (Hover) */
         .user-card::before, .user-card::after {
             content: '';
             position: absolute;
@@ -286,12 +306,10 @@
             left: -100%;
             transition: left 0.4s ease;
         }
-        /* Linha vermelha no topo do card */
         .user-card::before {
             top: 0;
             background: linear-gradient(90deg, transparent, var(--glow-red), transparent);
         }
-        /* Linha azul na base do card */
         .user-card::after {
             bottom: 0;
             background: linear-gradient(90deg, transparent, var(--glow-blue), transparent);
@@ -304,7 +322,6 @@
             box-shadow: -5px 0 15px rgba(0, 81, 255, 0.1), 5px 0 15px rgba(255, 0, 60, 0.1);
         }
 
-        /* Ativa a varredura das linhas internas no hover */
         .user-card:hover::before { left: 100%; }
         .user-card:hover::after { left: 100%; transition-delay: 0.05s; }
 
@@ -331,7 +348,6 @@
             position: relative;
         }
 
-        /* Moldura branca/preta sutil no avatar */
         .avatar::after {
             content: '';
             position: absolute;
@@ -433,7 +449,6 @@
             border-color: var(--pure-white);
         }
 
-        /* CAIXA DE CREDENCIAIS (TELA 3) */
         .credentials-box {
             background: rgba(0, 0, 0, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.03);
@@ -444,6 +459,7 @@
             font-size: 0.95rem;
             color: #a3b8cc;
             position: relative;
+            overflow-y: auto; /* Permite scroll nas credenciais caso sejam grandes */
         }
 
         .credentials-box::before {
@@ -491,6 +507,7 @@
             border-radius: 10px;
             transition: all 0.4s ease;
             text-transform: uppercase;
+            flex-shrink: 0;
         }
 
         .alert-link:hover {
@@ -640,6 +657,9 @@
             }
         ];
 
+        // Organiza a lista de usuários em ordem alfabética antes de renderizar
+        usersDB.sort((a, b) => a.name.localeCompare(b.name));
+
         let currentUser = null;
 
         // === RENDERIZAR INTERFACE ===
@@ -667,18 +687,14 @@
         window.onload = () => {
             renderUserList();
 
-            // 1. Mantém o texto pulsando por 2 segundos e some com ele
             setTimeout(() => {
                 document.getElementById('splash-text-container').classList.add('hide');
 
-                // 2. Transiciona a abertura das portas inclinadas (/)
                 setTimeout(() => {
                     document.getElementById('door-l').classList.add('open');
                     document.getElementById('door-r').classList.add('open');
 
-                    // 3. Mostra o painel centralizado durante o deslizamento
                     setTimeout(() => {
-                        // Deleta o elemento para liberar a memória e ponteiros de toque
                         setTimeout(() => {
                             document.getElementById('splash-screen').style.display = 'none';
                         }, 1400);
@@ -686,11 +702,9 @@
                         document.getElementById('main-panel').classList.add('show');
                         document.getElementById('screen-1').classList.remove('hidden');
 
-                        // 4. Inicia efeito cascata sequencial nos usuários
                         const cards = document.querySelectorAll('.user-card');
                         cards.forEach(card => card.classList.add('drop-in'));
 
-                        // 5. Libera cliques operacionais após a última queda
                         const finishTime = (usersDB.length * 140) + 550;
                         setTimeout(() => {
                             document.getElementById('user-list-container').classList.add('interactive');
